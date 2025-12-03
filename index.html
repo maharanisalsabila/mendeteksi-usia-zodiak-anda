@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Usia Akurat</title>
+    
+    <style>
+        /* --- CSS untuk Tampilan --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            text-align: left;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            background-color: #e6f7ed;
+            color: #28a745;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🗓️ Kalkulator Usia Akurat</h1>
+        <p>Masukkan **tanggal lahir** Anda untuk mengetahui usia Anda saat ini (tahun, bulan, hari).</p>
+
+        <div class="input-group">
+            <label for="birthdate">Tanggal Lahir:</label>
+            <input type="date" id="birthdate">
+            <button onclick="hitungUsia()">Hitung Usia</button>
+        </div>
+
+        <div class="result" id="hasilUsia">
+            Masukkan tanggal di atas dan tekan tombol "Hitung Usia".
+        </div>
+    </div>
+
+    <script>
+        /* --- JavaScript untuk Fungsionalitas --- */
+        function hitungUsia() {
+            const inputTanggalLahir = document.getElementById('birthdate').value;
+            const hasilUsiaElement = document.getElementById('hasilUsia');
+
+            // Validasi input
+            if (!inputTanggalLahir) {
+                hasilUsiaElement.innerHTML = '<span style="color: red;">⚠️ Mohon masukkan tanggal lahir Anda.</span>';
+                return;
+            }
+
+            const tanggalLahir = new Date(inputTanggalLahir);
+            const tanggalSekarang = new new Date();
+
+            // Cek jika tanggal lahir di masa depan
+            if (tanggalLahir > tanggalSekarang) {
+                hasilUsiaElement.innerHTML = '<span style="color: red;">⏳ Tanggal lahir tidak boleh di masa depan.</span>';
+                return;
+            }
+            
+            // Perhitungan Usia
+            let usiaTahun = tanggalSekarang.getFullYear() - tanggalLahir.getFullYear();
+            let usiaBulan = tanggalSekarang.getMonth() - tanggalLahir.getMonth();
+            let usiaHari = tanggalSekarang.getDate() - tanggalLahir.getDate();
+
+            // Penyesuaian Hari
+            if (usiaHari < 0) {
+                usiaBulan--;
+                // Dapatkan jumlah hari di bulan sebelumnya
+                const hariDalamBulanSebelumnya = new Date(tanggalSekarang.getFullYear(), tanggalSekarang.getMonth(), 0).getDate();
+                usiaHari += hariDalamBulanSebelumnya;
+            }
+
+            // Penyesuaian Bulan
+            if (usiaBulan < 0) {
+                usiaTahun--;
+                usiaBulan += 12;
+            }
+
+            // Tampilkan Hasil
+            hasilUsiaElement.innerHTML = `
+                Usia Anda saat ini adalah:
+                <br>
+                <span style="font-size: 1.5em; color: #007bff;">
+                    **${usiaTahun} tahun, ${usiaBulan} bulan, dan ${usiaHari} hari.**
+                </span>
+            `;
+        }
+    </script>
+</body>
+</html>
