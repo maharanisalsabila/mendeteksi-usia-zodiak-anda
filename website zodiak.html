@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendeteksi Usia & Zodiak</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 380px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        h2 { text-align: center; }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f6ff;
+            border-radius: 10px;
+            font-size: 17px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Deteksi Usia & Zodiak</h2>
+
+    <label for="tanggal">Masukkan Tanggal Lahir</label>
+    <input type="date" id="tanggal">
+
+    <button onclick="proses()">Deteksi</button>
+
+    <div id="output" class="result"></div>
+</div>
+
+
+<script>
+// Fungsi Menentukan Zodiak
+function getZodiak(day, month) {
+    const zodiakList = [
+        { nama: "Capricorn", start: [12, 22], end: [1, 19] },
+        { nama: "Aquarius",  start: [1, 20],  end: [2, 18] },
+        { nama: "Pisces",    start: [2, 19],  end: [3, 20] },
+        { nama: "Aries",     start: [3, 21],  end: [4, 19] },
+        { nama: "Taurus",    start: [4, 20],  end: [5, 20] },
+        { nama: "Gemini",    start: [5, 21],  end: [6, 20] },
+        { nama: "Cancer",    start: [6, 21],  end: [7, 22] },
+        { nama: "Leo",       start: [7, 23],  end: [8, 22] },
+        { nama: "Virgo",     start: [8, 23],  end: [9, 22] },
+        { nama: "Libra",     start: [9, 23],  end: [10, 22] },
+        { nama: "Scorpio",   start: [10, 23], end: [11, 21] },
+        { nama: "Sagitarius",start: [11, 22], end: [12, 21] }
+    ];
+
+    for (let z of zodiakList) {
+        const [sm, sd] = z.start;
+        const [em, ed] = z.end;
+
+        if ((month === sm && day >= sd) || (month === em && day <= ed)) {
+            return z.nama;
+        }
+    }
+    return "Tidak Diketahui";
+}
+
+
+// Menghitung usia + zodiak
+function proses() {
+    const input = document.getElementById("tanggal").value;
+    if (!input) {
+        document.getElementById("output").innerHTML = "Silakan masukkan tanggal lahir!";
+        return;
+    }
+
+    const lahir = new Date(input);
+    const sekarang = new Date();
+
+    let y = sekarang.getFullYear() - lahir.getFullYear();
+    let m = sekarang.getMonth() - lahir.getMonth();
+    let d = sekarang.getDate() - lahir.getDate();
+
+    if (m < 0 || (m === 0 && d < 0)) {
+        y--;
+        m += 12;
+    }
+
+    if (d < 0) {
+        const prevMonth = new Date(sekarang.getFullYear(), sekarang.getMonth(), 0);
+        d += prevMonth.getDate();
+        m--;
+    }
+
+    // Ambil tanggal dan bulan
+    const day = lahir.getDate();
+    const month = lahir.getMonth() + 1;
+
+    const zodiac = getZodiak(day, month);
+
+    document.getElementById("output").innerHTML = `
+        <strong>Usia Anda:</strong><br>
+        ${y} Tahun, ${m} Bulan, ${d} Hari<br><br>
+        <strong>Zodiak:</strong> ${zodiac}
+    `;
+}
+
+</script>
+
+</body>
+</html>
